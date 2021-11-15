@@ -6,6 +6,7 @@ import Table from "../components/Table";
 import ModalWindow from "../components/Modal";
 import useModalHandlers from "../utils/hooks/useModalHandlers";
 import { useState } from "react";
+import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 
 const useStyles = makeStyles({
   btnWrapper: {
@@ -46,7 +47,12 @@ const DeleteButton = styled(Button)(() => ({
 export default function MainPage() {
   const [modalTitle, setModalTitle] = useState("");
   const classes = useStyles();
-  const [isOpened, handleOpenModal, handleCloseModal] = useModalHandlers();
+  const [isOpenedModal, handleOpenModal, handleCloseModal] = useModalHandlers();
+  const [
+    isOpenedConfirmModal,
+    handleOpenConfirmModal,
+    handleCloseConfirmModal,
+  ] = useModalHandlers();
   return (
     <>
       <Header />
@@ -68,11 +74,17 @@ export default function MainPage() {
         >
           Edit
         </AddEditButton>
-        <DeleteButton>Delete</DeleteButton>
+        <DeleteButton onClick={handleOpenConfirmModal}>Delete</DeleteButton>
         <ModalWindow
-          open={isOpened}
+          open={isOpenedModal}
           onClose={handleCloseModal}
           title={modalTitle}
+        />
+        <ConfirmModal
+          open={isOpenedConfirmModal}
+          onClose={handleCloseConfirmModal}
+          title="Are you sure?"
+          text="Item will delete permanently."
         />
       </div>
     </>
