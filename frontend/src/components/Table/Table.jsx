@@ -3,6 +3,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { makeStyles } from "@mui/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { getItems } from "../../actions/item";
+import { Box } from "@mui/system";
 
 const useStyles = makeStyles({
   wrapper: {
@@ -44,7 +45,7 @@ export default function Table() {
   }, []);
 
   return (
-    <div className={classes.wrapper}>
+    <Box className={classes.wrapper}>
       <DataGrid
         rows={items}
         columns={columns}
@@ -57,6 +58,6 @@ export default function Table() {
         disableColumnMenu
         density="comfortable"
       />
-    </div>
+    </Box>
   );
 }

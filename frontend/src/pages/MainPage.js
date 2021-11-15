@@ -3,6 +3,9 @@ import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/material/styles";
 import Header from "../components/Header";
 import Table from "../components/Table";
+import ModalWindow from "../components/Modal";
+import useModalHandlers from "../utils/hooks/useModalHandlers";
+import { useState } from "react";
 
 const useStyles = makeStyles({
   btnWrapper: {
@@ -41,15 +44,36 @@ const DeleteButton = styled(Button)(() => ({
 }));
 
 export default function MainPage() {
+  const [modalTitle, setModalTitle] = useState("");
   const classes = useStyles();
+  const [isOpened, handleOpenModal, handleCloseModal] = useModalHandlers();
   return (
     <>
       <Header />
       <Table />
       <div className={classes.btnWrapper}>
-        <AddEditButton>Add</AddEditButton>
-        <AddEditButton>Edit</AddEditButton>
+        <AddEditButton
+          onClick={() => {
+            setModalTitle("Add New Item");
+            handleOpenModal();
+          }}
+        >
+          Add
+        </AddEditButton>
+        <AddEditButton
+          onClick={() => {
+            setModalTitle("Edit New Item");
+            handleOpenModal();
+          }}
+        >
+          Edit
+        </AddEditButton>
         <DeleteButton>Delete</DeleteButton>
+        <ModalWindow
+          open={isOpened}
+          onClose={handleCloseModal}
+          title={modalTitle}
+        />
       </div>
     </>
   );
