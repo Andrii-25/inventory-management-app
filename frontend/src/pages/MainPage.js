@@ -1,12 +1,12 @@
 import { Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/material/styles";
-import Header from "../components/Header";
-import Table from "../components/Table";
-import ModalWindow from "../components/Modal";
 import useModalHandlers from "../utils/hooks/useModalHandlers";
 import { useState } from "react";
-import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
+import Header from "../components/Header";
+import Table from "../components/Table";
+import ModalWindow from "../components/ModalWindow";
+import ConfirmModal from "../components/ConfirmModal";
 
 const useStyles = makeStyles({
   btnWrapper: {
