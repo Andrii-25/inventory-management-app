@@ -2,6 +2,7 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -30,7 +31,7 @@ const btnWrapper = {
   justifyContent: "end",
 };
 
-const SubmitButton = styled(Button)(() => ({
+const SubmitButton = styled(LoadingButton)(() => ({
   width: "134px",
   height: "37px",
   color: "white",
@@ -75,7 +76,9 @@ export default function ModalWindow({
         <TextField sx={textField} label="Model" variant="standard" />
         <TextField sx={textField} label="Price" variant="standard" />
         <Box sx={btnWrapper}>
-          <SubmitButton>ADD</SubmitButton>
+          <SubmitButton loading startIcon="Saving...">
+            ADD
+          </SubmitButton>
           <CancelButton onClick={onClose}>CANCEL</CancelButton>
         </Box>
       </Box>
