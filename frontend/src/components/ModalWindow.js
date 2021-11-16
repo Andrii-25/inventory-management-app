@@ -64,6 +64,7 @@ export default function ModalWindow({
   title,
   handleSubmit,
   handleChange,
+  data,
 }) {
   return (
     <Modal open={open} onClose={onClose}>
@@ -71,16 +72,46 @@ export default function ModalWindow({
         <Typography variant="h6" component="h2">
           {title}
         </Typography>
-        <TextField sx={textField} label="Category" variant="standard" />
-        <TextField sx={textField} label="Brand" variant="standard" />
-        <TextField sx={textField} label="Model" variant="standard" />
-        <TextField sx={textField} label="Price" variant="standard" />
-        <Box sx={btnWrapper}>
-          <SubmitButton loading startIcon="Saving...">
-            ADD
-          </SubmitButton>
-          <CancelButton onClick={onClose}>CANCEL</CancelButton>
-        </Box>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            sx={textField}
+            label="Category"
+            variant="standard"
+            value={data.category}
+            name="category"
+            onChange={handleChange}
+          />
+          <TextField
+            sx={textField}
+            label="Brand"
+            variant="standard"
+            value={data.brand}
+            name="brand"
+            onChange={handleChange}
+          />
+          <TextField
+            sx={textField}
+            label="Model"
+            variant="standard"
+            value={data.model}
+            name="model"
+            onChange={handleChange}
+          />
+          <TextField
+            sx={textField}
+            label="Price"
+            variant="standard"
+            value={data.price}
+            name="price"
+            onChange={handleChange}
+          />
+          <Box sx={btnWrapper}>
+            <SubmitButton loading={false} type="submit">
+              ADD
+            </SubmitButton>
+            <CancelButton onClick={onClose}>CANCEL</CancelButton>
+          </Box>
+        </form>
       </Box>
     </Modal>
   );

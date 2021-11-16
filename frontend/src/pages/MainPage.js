@@ -50,6 +50,8 @@ const DeleteButton = styled(Button)(() => ({
 export default function MainPage() {
   const [modalTitle, setModalTitle] = useState("");
   const [deleteError, setDeleteError] = useState(false);
+  const [error, setError] = useState(false);
+  const [item, setItem] = useState({});
 
   const classes = useStyles();
 
@@ -65,16 +67,45 @@ export default function MainPage() {
 
   const dispatch = useDispatch();
 
-  function handleDelete() {
-    if (selectedItems.length === 0) {
-      handleCloseConfirmModal();
-      setDeleteError(true);
+  async function handleDelete() {
+    try {
+      if (selectedItems.length === 0) {
+        handleCloseConfirmModal();
+        setDeleteError(true);
+        setTimeout(() => {
+          setDeleteError(false);
+        }, 5000);
+      }
+      await dispatch(removeItem(selectedItems[0]));
+      // window.location.reload();
+    } catch (err) {
+      setError(true);
       setTimeout(() => {
         setDeleteError(false);
       }, 5000);
     }
-    dispatch(removeItem(selectedItems[0]));
-    // window.location.reload();
+  }
+
+  function handleChange(e) {
+    const { target } = e;
+    const { value, name } = target;
+    let i = { ...item };
+    i[name] = value;
+    setItem(i);
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    try {
+      await dispatch(addItem(item));
+    } catch (err) {
+      setError(true);
+      setTimeout(() => {
+        setDeleteError(false);
+      }, 5000);
+    } finally {
+      handleCloseModal();
+    }
   }
 
   return (
@@ -102,7 +133,10 @@ export default function MainPage() {
         <ModalWindow
           open={isOpenedModal}
           onClose={handleCloseModal}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
           title={modalTitle}
+          data={item}
         />
         <ConfirmModal
           open={isOpenedConfirmModal}
@@ -113,6 +147,9 @@ export default function MainPage() {
         />
         {deleteError ? (
           <ErrorSnackbar open={true} text={"You have not selected anything!"} />
+        ) : null}
+        {error ? (
+          <ErrorSnackbar open={true} text={"Something went wrong!"} />
         ) : null}
       </div>
     </>
