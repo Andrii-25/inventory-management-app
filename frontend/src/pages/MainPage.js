@@ -59,11 +59,8 @@ export default function MainPage() {
   const items = useSelector((state) => state.items);
 
   function getEditedItem() {
-    const editedItem = items.find((i) => i.id === selectedItems[0]);
-    if (!editedItem) {
-      return [];
-    } else {
-      return editedItem;
+    if (items.length > 0) {
+      return items.find((i) => i.id === selectedItems[0]);
     }
   }
 
@@ -72,6 +69,7 @@ export default function MainPage() {
   useEffect(async () => {
     try {
       await dispatch(getItems());
+      console.log(items);
     } catch (error) {
       console.log(error);
     }
@@ -178,7 +176,7 @@ export default function MainPage() {
           handleChange={handleChange}
           handleSubmit={handleSubmitEdit}
           title={modalTitle}
-          data={() => getEditedItem()}
+          data={getEditedItem()}
         />
         <ConfirmModal
           open={isOpenedConfirmModal}
