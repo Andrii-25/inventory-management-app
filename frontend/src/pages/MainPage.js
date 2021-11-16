@@ -49,8 +49,8 @@ const DeleteButton = styled(Button)(() => ({
 
 export default function MainPage() {
   const [modalTitle, setModalTitle] = useState("");
-  const [deleteError, setDeleteError] = useState(false);
   const [error, setError] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -73,7 +73,7 @@ export default function MainPage() {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [items]);
 
   const classes = useStyles();
 
@@ -107,29 +107,37 @@ export default function MainPage() {
     setItem(i);
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(event) {
     try {
+      setLoading(true);
+      event.preventDefault();
       await dispatch(addItem(item));
     } catch (err) {
-      setError(true);
       setTimeout(() => {
-        setDeleteError(false);
+        setError(false);
       }, 5000);
+      setError(true);
     } finally {
+      setLoading(false);
       handleCloseModal();
+      setItem({});
     }
   }
 
-  async function handleSubmitEdit() {
+  async function handleSubmitEdit(event) {
     try {
+      setLoading(true);
+      event.preventDefault();
       await dispatch(updateItem(item, selectedItems[0]));
     } catch (err) {
       setError(true);
       setTimeout(() => {
-        setDeleteError(false);
+        setError(false);
       }, 5000);
     } finally {
+      setLoading(false);
       handleCloseEditModal();
+      setItem({});
     }
   }
 
@@ -169,6 +177,7 @@ export default function MainPage() {
           handleSubmit={handleSubmit}
           title={modalTitle}
           data={item}
+          isLoading={isLoading}
         />
         <ModalWindow
           open={isOpenedEditModal}
@@ -177,6 +186,7 @@ export default function MainPage() {
           handleSubmit={handleSubmitEdit}
           title={modalTitle}
           data={getEditedItem()}
+          isLoading={isLoading}
         />
         <ConfirmModal
           open={isOpenedConfirmModal}

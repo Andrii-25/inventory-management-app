@@ -1,9 +1,12 @@
-import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { TextField } from "@mui/material";
+import {
+  TextField,
+  Box,
+  Button,
+  Typography,
+  Modal,
+  CircularProgress,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 const modalBody = {
@@ -65,6 +68,7 @@ export default function ModalWindow({
   handleSubmit,
   handleChange,
   data = {},
+  isLoading = false,
 }) {
   return (
     <Modal open={open} onClose={onClose}>
@@ -106,8 +110,23 @@ export default function ModalWindow({
             onChange={handleChange}
           />
           <Box sx={btnWrapper}>
-            <SubmitButton loading={false} type="submit">
-              ADD
+            <SubmitButton
+              loading={isLoading}
+              loadingIndicator={
+                <>
+                  <CircularProgress
+                    size={15}
+                    sx={{
+                      color: "white",
+                      margin: "4px 7px 0 0",
+                    }}
+                  />
+                  <Typography sx={{ color: "white" }}>Saving...</Typography>
+                </>
+              }
+              type="submit"
+            >
+              {isLoading ? null : "ADD"}
             </SubmitButton>
             <CancelButton onClick={onClose}>CANCEL</CancelButton>
           </Box>
