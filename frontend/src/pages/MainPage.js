@@ -58,7 +58,14 @@ export default function MainPage() {
 
   const items = useSelector((state) => state.items);
 
-  const editedItem = items.find((i) => i.id === selectedItems[0]);
+  function getEditedItem() {
+    const editedItem = items.find((i) => i.id === selectedItems[0]);
+    if (!editedItem) {
+      return [];
+    } else {
+      return editedItem;
+    }
+  }
 
   const [item, setItem] = useState({});
 
@@ -171,7 +178,7 @@ export default function MainPage() {
           handleChange={handleChange}
           handleSubmit={handleSubmitEdit}
           title={modalTitle}
-          data={editedItem}
+          data={() => getEditedItem()}
         />
         <ConfirmModal
           open={isOpenedConfirmModal}
