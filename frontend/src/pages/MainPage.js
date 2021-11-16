@@ -3,10 +3,13 @@ import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/material/styles";
 import useModalHandlers from "../utils/hooks/useModalHandlers";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addItem, updateItem, removeItem } from "../actions/item";
 import Header from "../components/Header";
 import Table from "../components/Table";
 import ModalWindow from "../components/ModalWindow";
 import ConfirmModal from "../components/ConfirmModal";
+import ErrorSnackbar from "../components/ErrorSnackbar";
 
 const useStyles = makeStyles({
   btnWrapper: {
@@ -46,13 +49,34 @@ const DeleteButton = styled(Button)(() => ({
 
 export default function MainPage() {
   const [modalTitle, setModalTitle] = useState("");
+  const [deleteError, setDeleteError] = useState(false);
+
   const classes = useStyles();
+
   const [isOpenedModal, handleOpenModal, handleCloseModal] = useModalHandlers();
+
   const [
     isOpenedConfirmModal,
     handleOpenConfirmModal,
     handleCloseConfirmModal,
   ] = useModalHandlers();
+
+  const selectedItems = useSelector((state) => state.selectedItems);
+
+  const dispatch = useDispatch();
+
+  function handleDelete() {
+    if (selectedItems.length === 0) {
+      handleCloseConfirmModal();
+      setDeleteError(true);
+      setTimeout(() => {
+        setDeleteError(false);
+      }, 5000);
+    }
+    dispatch(removeItem(selectedItems[0]));
+    // window.location.reload();
+  }
+
   return (
     <>
       <Header />
@@ -85,7 +109,11 @@ export default function MainPage() {
           onClose={handleCloseConfirmModal}
           title="Are you sure?"
           text="Item will delete permanently."
+          onDelete={handleDelete}
         />
+        {deleteError ? (
+          <ErrorSnackbar open={true} text={"You have not selected anything!"} />
+        ) : null}
       </div>
     </>
   );

@@ -56,7 +56,7 @@ const CancelButton = styled(Button)(() => ({
   },
 }));
 
-export default function ConfirmModal({ open, onClose, onClick, title, text }) {
+export default function ConfirmModal({ open, onClose, onDelete, title, text }) {
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={modalBody}>
@@ -69,7 +69,7 @@ export default function ConfirmModal({ open, onClose, onClick, title, text }) {
           </Typography>
         </Box>
         <Box sx={btnWrapper}>
-          <DeleteButton>DELETE</DeleteButton>
+          <DeleteButton onClick={() => onDelete()}>DELETE</DeleteButton>
           <CancelButton onClick={onClose}>CANCEL</CancelButton>
         </Box>
       </Box>
