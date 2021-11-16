@@ -1,16 +1,26 @@
-import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { makeStyles } from "@mui/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { getItems } from "../actions/item";
 import { Box } from "@mui/system";
+import { useEffect } from "react";
+import { setSelectedItems } from "../actions/selectedItems";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer":
+      {
+        display: "none",
+      },
+    "&.MuiDataGrid-root .MuiDataGrid-cell:focus": {
+      outline: "none",
+    },
+  },
   wrapper: {
     width: "90%",
     margin: "5% 0 0 5%",
   },
-});
+}));
 
 const columns = [
   { field: "id", headerName: "ID", width: 150, sortable: false },
@@ -35,8 +45,9 @@ export default function Table() {
 
   const dispatch = useDispatch();
   const items = useSelector((state) => state.items);
+  const selectedItems = useSelector((state) => state.selectedItems);
 
-  React.useEffect(async () => {
+  useEffect(async () => {
     try {
       await dispatch(getItems());
     } catch (error) {
@@ -44,9 +55,20 @@ export default function Table() {
     }
   }, []);
 
+  function handleSelect(selection) {
+    if (selection.length > 1) {
+      const selectionSet = new Set(selectedItems);
+      const result = selection.filter((s) => !selectionSet.has(s));
+      dispatch(setSelectedItems(result));
+    } else {
+      dispatch(setSelectedItems(selection));
+    }
+  }
+
   return (
     <Box className={classes.wrapper}>
       <DataGrid
+        className={classes.root}
         rows={items}
         columns={columns}
         pageSize={8}
@@ -57,6 +79,9 @@ export default function Table() {
         autoPageSize
         disableColumnMenu
         density="comfortable"
+        onSelectionModelChange={(selection) => handleSelect(selection)}
+        selectionModel={selectedItems}
+        disableSelectionOnClick
       />
     </Box>
   );
