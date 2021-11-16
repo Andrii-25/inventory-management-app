@@ -24,20 +24,6 @@ module.exports = {
     }
   },
 
-  getItemById: async function (req, res) {
-    try {
-      const { id } = req.params;
-      const items = await Item.findAll({ where: { id } });
-      if (items.length === 0) {
-        res.json({ message: "There are no items!" });
-      } else {
-        res.status(200).json(items);
-      }
-    } catch (err) {
-      res.json({ message: err });
-    }
-  },
-
   removeItem: async function (req, res) {
     try {
       const { id } = req.params;
