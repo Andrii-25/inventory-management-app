@@ -14,7 +14,7 @@ class ItemService {
   }
 
   updateItem(data, id) {
-    return http.put(`/items/${id}`, data);
+    return http.put(`/items/?id=${id}`, data);
   }
 }
 

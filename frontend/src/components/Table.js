@@ -40,7 +40,7 @@ const columns = [
   },
 ];
 
-export default function Table() {
+export default function Table({ itemData }) {
   const classes = useStyles();
 
   const dispatch = useDispatch();
@@ -60,6 +60,8 @@ export default function Table() {
       const selectionSet = new Set(selectedItems);
       const result = selection.filter((s) => !selectionSet.has(s));
       dispatch(setSelectedItems(result));
+      const editedItem = itemData.find((i) => i.id === selectedItems[0]);
+      console.log({ ...editedItem });
     } else {
       dispatch(setSelectedItems(selection));
     }
@@ -69,7 +71,7 @@ export default function Table() {
     <Box className={classes.wrapper}>
       <DataGrid
         className={classes.root}
-        rows={items}
+        rows={itemData}
         columns={columns}
         pageSize={8}
         rowsPerPageOptions={[8]}

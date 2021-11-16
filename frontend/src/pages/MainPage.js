@@ -2,9 +2,9 @@ import { Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/material/styles";
 import useModalHandlers from "../utils/hooks/useModalHandlers";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addItem, updateItem, removeItem } from "../actions/item";
+import { addItem, updateItem, removeItem, getItems } from "../actions/item";
 import Header from "../components/Header";
 import Table from "../components/Table";
 import ModalWindow from "../components/ModalWindow";
@@ -51,11 +51,30 @@ export default function MainPage() {
   const [modalTitle, setModalTitle] = useState("");
   const [deleteError, setDeleteError] = useState(false);
   const [error, setError] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const selectedItems = useSelector((state) => state.selectedItems);
+
+  const items = useSelector((state) => state.items);
+
+  const editedItem = items.find((i) => i.id === selectedItems[0]);
+
   const [item, setItem] = useState({});
+
+  useEffect(async () => {
+    try {
+      await dispatch(getItems());
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const classes = useStyles();
 
   const [isOpenedModal, handleOpenModal, handleCloseModal] = useModalHandlers();
+  const [isOpenedEditModal, handleOpenEditModal, handleCloseEditModal] =
+    useModalHandlers();
 
   const [
     isOpenedConfirmModal,
@@ -63,25 +82,14 @@ export default function MainPage() {
     handleCloseConfirmModal,
   ] = useModalHandlers();
 
-  const selectedItems = useSelector((state) => state.selectedItems);
-
-  const dispatch = useDispatch();
-
   async function handleDelete() {
     try {
-      if (selectedItems.length === 0) {
-        handleCloseConfirmModal();
-        setDeleteError(true);
-        setTimeout(() => {
-          setDeleteError(false);
-        }, 5000);
-      }
       await dispatch(removeItem(selectedItems[0]));
-      // window.location.reload();
+      window.location.reload();
     } catch (err) {
       setError(true);
       setTimeout(() => {
-        setDeleteError(false);
+        setError(false);
       }, 5000);
     }
   }
@@ -94,8 +102,7 @@ export default function MainPage() {
     setItem(i);
   }
 
-  async function handleSubmit(event) {
-    event.preventDefault();
+  async function handleSubmit() {
     try {
       await dispatch(addItem(item));
     } catch (err) {
@@ -108,12 +115,26 @@ export default function MainPage() {
     }
   }
 
+  async function handleSubmitEdit() {
+    try {
+      await dispatch(updateItem(item, selectedItems[0]));
+    } catch (err) {
+      setError(true);
+      setTimeout(() => {
+        setDeleteError(false);
+      }, 5000);
+    } finally {
+      handleCloseEditModal();
+    }
+  }
+
   return (
     <>
       <Header />
-      <Table />
+      <Table itemData={items} />
       <div className={classes.btnWrapper}>
         <AddEditButton
+          disabled={selectedItems[0] ? true : false}
           onClick={() => {
             setModalTitle("Add New Item");
             handleOpenModal();
@@ -122,14 +143,20 @@ export default function MainPage() {
           Add
         </AddEditButton>
         <AddEditButton
+          disabled={selectedItems[0] ? false : true}
           onClick={() => {
             setModalTitle("Edit New Item");
-            handleOpenModal();
+            handleOpenEditModal();
           }}
         >
           Edit
         </AddEditButton>
-        <DeleteButton onClick={handleOpenConfirmModal}>Delete</DeleteButton>
+        <DeleteButton
+          disabled={selectedItems[0] ? false : true}
+          onClick={handleOpenConfirmModal}
+        >
+          Delete
+        </DeleteButton>
         <ModalWindow
           open={isOpenedModal}
           onClose={handleCloseModal}
@@ -138,6 +165,14 @@ export default function MainPage() {
           title={modalTitle}
           data={item}
         />
+        <ModalWindow
+          open={isOpenedEditModal}
+          onClose={handleCloseEditModal}
+          handleChange={handleChange}
+          handleSubmit={handleSubmitEdit}
+          title={modalTitle}
+          data={editedItem}
+        />
         <ConfirmModal
           open={isOpenedConfirmModal}
           onClose={handleCloseConfirmModal}
@@ -145,9 +180,6 @@ export default function MainPage() {
           text="Item will delete permanently."
           onDelete={handleDelete}
         />
-        {deleteError ? (
-          <ErrorSnackbar open={true} text={"You have not selected anything!"} />
-        ) : null}
         {error ? (
           <ErrorSnackbar open={true} text={"Something went wrong!"} />
         ) : null}

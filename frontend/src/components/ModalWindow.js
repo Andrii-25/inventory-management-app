@@ -64,7 +64,7 @@ export default function ModalWindow({
   title,
   handleSubmit,
   handleChange,
-  data,
+  data = {},
 }) {
   return (
     <Modal open={open} onClose={onClose}>
@@ -77,7 +77,7 @@ export default function ModalWindow({
             sx={textField}
             label="Category"
             variant="standard"
-            value={data.category}
+            defaultValue={data.category || ""}
             name="category"
             onChange={handleChange}
           />
@@ -85,7 +85,7 @@ export default function ModalWindow({
             sx={textField}
             label="Brand"
             variant="standard"
-            value={data.brand}
+            defaultValue={data.brand || ""}
             name="brand"
             onChange={handleChange}
           />
@@ -93,7 +93,7 @@ export default function ModalWindow({
             sx={textField}
             label="Model"
             variant="standard"
-            value={data.model}
+            defaultValue={data.model || ""}
             name="model"
             onChange={handleChange}
           />
@@ -101,7 +101,7 @@ export default function ModalWindow({
             sx={textField}
             label="Price"
             variant="standard"
-            value={data.price}
+            defaultValue={data.price || ""}
             name="price"
             onChange={handleChange}
           />
