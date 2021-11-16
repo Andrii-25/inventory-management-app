@@ -4,6 +4,7 @@ const {
   getAllItems,
   removeItem,
   updateItem,
+  getItemById,
 } = require("../controllers/item.controller.js");
 
 const router = express.Router();
@@ -11,6 +12,8 @@ const router = express.Router();
 router.post("/", addItem);
 
 router.get("/", getAllItems);
+
+router.get("/:id", getItemById);
 
 router.delete("/:id", removeItem);
 
