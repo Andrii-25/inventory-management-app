@@ -89,6 +89,7 @@ export default function MainPage() {
 
   async function handleDelete() {
     try {
+      setLoading(true);
       await dispatch(removeItem(selectedItems[0]));
       window.location.reload();
     } catch (err) {
@@ -96,6 +97,8 @@ export default function MainPage() {
       setTimeout(() => {
         setError(false);
       }, 5000);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -194,6 +197,7 @@ export default function MainPage() {
           title="Are you sure?"
           text="Item will delete permanently."
           onDelete={handleDelete}
+          isLoading={isLoading}
         />
         {error ? (
           <ErrorSnackbar open={true} text={"Something went wrong!"} />

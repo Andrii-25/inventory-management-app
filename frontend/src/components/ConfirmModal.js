@@ -1,8 +1,12 @@
-import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
+import {
+  Box,
+  Modal,
+  Typography,
+  Button,
+  CircularProgress,
+} from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { styled } from "@mui/material/styles";
-import Button from "@mui/material/Button";
 
 const modalBody = {
   position: "absolute",
@@ -29,7 +33,7 @@ const btnWrapper = {
   justifyContent: "end",
 };
 
-const DeleteButton = styled(Button)(() => ({
+const DeleteButton = styled(LoadingButton)(() => ({
   width: "134px",
   height: "37px",
   color: "white",
@@ -56,7 +60,14 @@ const CancelButton = styled(Button)(() => ({
   },
 }));
 
-export default function ConfirmModal({ open, onClose, onDelete, title, text }) {
+export default function ConfirmModal({
+  open,
+  onClose,
+  onDelete,
+  title,
+  text,
+  isLoading,
+}) {
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={modalBody}>
@@ -69,7 +80,25 @@ export default function ConfirmModal({ open, onClose, onDelete, title, text }) {
           </Typography>
         </Box>
         <Box sx={btnWrapper}>
-          <DeleteButton onClick={() => onDelete()}>DELETE</DeleteButton>
+          <DeleteButton
+            onClick={() => onDelete()}
+            loading={isLoading}
+            loadingIndicator={
+              <>
+                <CircularProgress
+                  size={15}
+                  sx={{
+                    color: "white",
+                    margin: "4px 7px 0 0",
+                  }}
+                />
+                <Typography sx={{ color: "white" }}>Deleting...</Typography>
+              </>
+            }
+            type="submit"
+          >
+            {isLoading ? null : "DELETE"}
+          </DeleteButton>
           <CancelButton onClick={onClose}>CANCEL</CancelButton>
         </Box>
       </Box>
