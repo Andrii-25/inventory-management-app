@@ -69,7 +69,6 @@ export default function MainPage() {
   useEffect(async () => {
     try {
       await dispatch(getItems());
-      console.log(items);
     } catch (error) {
       console.log(error);
     }
@@ -114,12 +113,14 @@ export default function MainPage() {
     try {
       setLoading(true);
       event.preventDefault();
-      await dispatch(addItem(item));
+      const res = await dispatch(addItem(item));
+      console.log(res);
     } catch (err) {
+      console.log(err);
+      setError(true);
       setTimeout(() => {
         setError(false);
       }, 5000);
-      setError(true);
     } finally {
       setLoading(false);
       handleCloseModal();
