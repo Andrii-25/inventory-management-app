@@ -23,19 +23,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const columns = [
-  { field: "id", headerName: "ID", width: 150, sortable: false },
-  { field: "category", headerName: "Category", width: 250, sortable: false },
-  { field: "brand", headerName: "Brand", width: 250, sortable: false },
+  { field: "id", headerName: "ID", width: 230, sortable: false },
+  { field: "category", headerName: "Category", width: 230, sortable: false },
+  { field: "brand", headerName: "Brand", width: 230, sortable: false },
   {
     field: "model",
     headerName: "Model",
-    width: 250,
+    width: 230,
     sortable: false,
   },
   {
     field: "price",
     headerName: "Price",
-    width: 270,
+    width: 230,
     sortable: false,
   },
 ];
